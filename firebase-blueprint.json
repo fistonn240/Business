@@ -24,6 +24,19 @@
         "updatedAt": { "type": "string", "format": "date-time", "description": "When the section was last updated." }
       },
       "required": ["uid", "sectionId", "content", "updatedAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "A user of the application.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The user ID." },
+        "displayName": { "type": "string", "description": "The display name of the user." },
+        "email": { "type": "string", "description": "The email address of the user." },
+        "photoURL": { "type": "string", "description": "The photo URL of the user." },
+        "lastLogin": { "type": "string", "format": "date-time", "description": "When the user last logged in." }
+      },
+      "required": ["uid", "displayName", "email", "lastLogin"]
     }
   },
   "firestore": {
@@ -34,6 +47,10 @@
     "/strategy/{strategyId}": {
       "schema": "StrategySection",
       "description": "Collection of user strategy sections."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles."
     }
   }
 }

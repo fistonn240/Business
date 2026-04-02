@@ -12,6 +12,7 @@ import AICoach from './components/AICoach';
 import StrategyCanvas from './components/StrategyCanvas';
 import Billing from './components/Billing';
 import MusicLab from './components/MusicLab';
+import Profile from './components/Profile';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="strategy" element={<StrategyCanvas />} />
             <Route path="billing" element={<Billing />} />
             <Route path="music" element={<MusicLab />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </BrowserRouter>

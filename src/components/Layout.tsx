@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, Target, MessageSquare, Briefcase, Settings, Menu, X, LogOut, CreditCard, Music } from 'lucide-react';
+import { NavLink, Outlet, Link } from 'react-router-dom';
+import { LayoutDashboard, Target, MessageSquare, Briefcase, Settings, Menu, X, LogOut, CreditCard, Music, User as UserIcon } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAuth } from './AuthProvider';
@@ -20,6 +20,7 @@ export default function Layout() {
     { to: '/strategy', icon: Briefcase, label: 'Strategy' },
     { to: '/music', icon: Music, label: 'AI Music Lab' },
     { to: '/billing', icon: CreditCard, label: 'Billing' },
+    { to: '/profile', icon: UserIcon, label: 'Account' },
   ];
 
   return (
@@ -33,6 +34,9 @@ export default function Layout() {
           <span className="font-bold text-xl tracking-tight text-slate-900">Ascend</span>
         </div>
         <div className="flex items-center gap-2">
+          <Link to="/profile" className="w-8 h-8 rounded-full overflow-hidden border border-slate-200">
+            <img src={user?.photoURL || ''} alt="" className="w-full h-full object-cover" />
+          </Link>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X /> : <Menu />}
           </button>
@@ -75,15 +79,13 @@ export default function Layout() {
           </nav>
 
           <div className="p-4 border-t space-y-4">
-            <div className="flex items-center gap-3 px-2">
-              <img src={user?.photoURL || ''} alt={user?.displayName || ''} className="w-8 h-8 rounded-full" />
+            <Link to="/profile" className="flex items-center gap-3 px-2 group">
+              <img src={user?.photoURL || ''} alt={user?.displayName || ''} className="w-8 h-8 rounded-full border border-slate-200 group-hover:border-indigo-400 transition-colors" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-slate-900 truncate">{user?.displayName}</p>
-                <button onClick={signOut} className="text-xs text-rose-600 font-medium hover:underline flex items-center gap-1">
-                  <LogOut className="w-3 h-3" /> Sign Out
-                </button>
+                <p className="text-sm font-bold text-slate-900 truncate group-hover:text-indigo-600 transition-colors">{user?.displayName}</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">View Profile</p>
               </div>
-            </div>
+            </Link>
             
             <div className="bg-slate-900 rounded-2xl p-4 text-white relative overflow-hidden">
               <div className="relative z-10">
