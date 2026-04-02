@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: goals
+    // Fields:
+    //   - uid: string (required, immutable) - Owner ID
+    //   - title: string (required, max 200 chars) - Goal title
+    //   - status: string (required, enum: completed, in-progress, pending)
+    //   - category: string (required, max 50 chars)
+    //   - createdAt: timestamp (required, immutable)
+    //
+    // Collection: strategy
+    // Fields:
+    //   - uid: string (required, immutable) - Owner ID
+    //   - sectionId: string (required, immutable)
+    //   - content: string (required, max 5000 chars)
+    //   - updatedAt: timestamp (required)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isValidGoal(data) {
+      return data.uid is string &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.status in ['completed', 'in-progress', 'pending'] &&
+             data.category is string && data.category.size() <= 50;
+    }
+
+    function isValidStrategy(data) {
+      return data.uid is string &&
+             data.sectionId is string &&
+             data.content is string && data.content.size() <= 5000;
+    }
+
+    match /goals/{goalId} {
+      allow read: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid) && isValidGoal(request.resource.data);
+      allow update: if isOwner(resource.data.uid) && 
+                      isValidGoal(request.resource.data) &&
+                      request.resource.data.uid == resource.data.uid &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isOwner(resource.data.uid);
+    }
+
+    match /strategy/{strategyId} {
+      allow read: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid) && isValidStrategy(request.resource.data);
+      allow update: if isOwner(resource.data.uid) && 
+                      isValidStrategy(request.resource.data) &&
+                      request.resource.data.uid == resource.data.uid &&
+                      request.resource.data.sectionId == resource.data.sectionId;
+      allow delete: if isOwner(resource.data.uid);
+    }
+
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "Goal": {
+      "title": "Goal",
+      "description": "A business or life goal to be achieved.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The user ID who owns this goal." },
+        "title": { "type": "string", "description": "The title of the goal." },
+        "status": { "type": "string", "enum": ["completed", "in-progress", "pending"], "description": "The current status of the goal." },
+        "category": { "type": "string", "description": "The category of the goal (e.g., Business, Life)." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the goal was created." }
+      },
+      "required": ["uid", "title", "status", "category", "createdAt"]
+    },
+    "StrategySection": {
+      "title": "Strategy Section",
+      "description": "A section of the business strategy canvas.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The user ID who owns this strategy." },
+        "sectionId": { "type": "string", "description": "The ID of the section (e.g., value-prop)." },
+        "content": { "type": "string", "description": "The content of the strategy section." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "When the section was last updated." }
+      },
+      "required": ["uid", "sectionId", "content", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/goals/{goalId}": {
+      "schema": "Goal",
+      "description": "Collection of user goals."
+    },
+    "/strategy/{strategyId}": {
+      "schema": "StrategySection",
+      "description": "Collection of user strategy sections."
+    }
+  }
+}
