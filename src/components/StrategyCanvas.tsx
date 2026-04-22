@@ -3,6 +3,7 @@ import { Target, Users, Zap, Shield, HelpCircle, Save, Loader2 } from 'lucide-re
 import { collection, query, where, onSnapshot, setDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from './AuthProvider';
+import { handleFirestoreError, OperationType } from '../lib/firestoreUtils';
 
 export default function StrategyCanvas() {
   const { user } = useAuth();
@@ -27,6 +28,8 @@ export default function StrategyCanvas() {
         data[item.sectionId] = item.content;
       });
       setStrategyData(data);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'strategy');
     });
 
     return unsubscribe;
@@ -44,7 +47,7 @@ export default function StrategyCanvas() {
         updatedAt: serverTimestamp()
       });
     } catch (error) {
-      console.error("Error saving strategy:", error);
+      handleFirestoreError(error, OperationType.WRITE, `strategy/${user.uid}_${sectionId}`);
     } finally {
       setIsSaving(null);
     }

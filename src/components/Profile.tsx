@@ -3,6 +3,7 @@ import { useAuth } from './AuthProvider';
 import { User, Mail, Calendar, Shield, Camera, LogOut, Trash2 } from 'lucide-react';
 import { doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { handleFirestoreError, OperationType } from '../lib/firestoreUtils';
 
 export default function Profile() {
   const { user, signOut } = useAuth();
@@ -17,7 +18,7 @@ export default function Profile() {
         // For a real app, you'd use a cloud function or admin SDK to delete the Auth user.
         signOut();
       } catch (error) {
-        console.error("Error deleting profile:", error);
+        handleFirestoreError(error, OperationType.DELETE, `users/${user.uid}`);
       }
     }
   };

@@ -1,6 +1,7 @@
 import React from 'react';
-import { TrendingUp, CheckCircle2, Clock, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { TrendingUp, CheckCircle2, Globe, Shield, Wallet, Activity, ArrowUpRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { useAuth } from './AuthProvider';
 
 const data = [
   { name: 'Mon', progress: 40 },
@@ -13,32 +14,40 @@ const data = [
 ];
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  
+  const stats = [
+    { label: 'Settlement Ledger', value: '428', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Asset Under Management', value: '$12.8M', icon: Wallet, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Risk Protocol', value: 'Alpha-7', icon: Shield, color: 'text-rose-600', bg: 'bg-rose-50' },
+    { label: 'Node Uptime', value: '99.99%', icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
+  ];
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-700">
       <header>
-        <h1 className="text-3xl font-bold text-slate-900">Welcome back, Strategist</h1>
-        <p className="text-slate-500 mt-1">Here's what's happening with your business goals today.</p>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] bg-indigo-50 px-2 py-0.5 rounded-md">Institutional Portal</span>
+          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+        </div>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Welcome, {user?.displayName?.split(' ')[0]}</h1>
+        <p className="text-slate-500 font-serif italic text-lg">Your global financial summary for 22 April 2026.</p>
       </header>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: 'Completed Goals', value: '12', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-          { label: 'Active Projects', value: '5', icon: Clock, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-          { label: 'Growth Rate', value: '+24%', icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50' },
-          { label: 'Critical Tasks', value: '3', icon: AlertCircle, color: 'text-rose-600', bg: 'bg-rose-50' },
-        ].map((stat, i) => (
-          <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`${stat.bg} p-3 rounded-xl`}>
+        {stats.map((stat, i) => (
+          <div key={i} className="bg-white p-7 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-100 transition-all group cursor-pointer active:scale-95">
+            <div className="flex items-center justify-between mb-6">
+              <div className={`${stat.bg} p-4 rounded-2xl group-hover:rotate-12 transition-transform`}>
                 <stat.icon className={`${stat.color} w-6 h-6`} />
               </div>
-              <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full flex items-center gap-1">
-                <ArrowUpRight className="w-3 h-3" /> 12%
+              <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full flex items-center gap-1 uppercase tracking-widest">
+                <ArrowUpRight className="w-3 h-3" /> Live
               </span>
             </div>
-            <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
+            <p className="text-3xl font-black text-slate-900 mt-2 tracking-tighter font-mono">{stat.value}</p>
           </div>
         ))}
       </div>

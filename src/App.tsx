@@ -13,6 +13,7 @@ import StrategyCanvas from './components/StrategyCanvas';
 import Billing from './components/Billing';
 import MusicLab from './components/MusicLab';
 import Profile from './components/Profile';
+import DashMain from './components/FinSphere/DashMain';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
+            <Route path="finsphere" element={<DashMain />} />
             <Route path="goals" element={<GoalTracker />} />
             <Route path="coach" element={<AICoach />} />
             <Route path="strategy" element={<StrategyCanvas />} />

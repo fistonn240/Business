@@ -25,28 +25,42 @@
       },
       "required": ["uid", "sectionId", "content", "updatedAt"]
     },
-    "User": {
-      "title": "User",
-      "description": "A user of the application.",
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A financial transaction record.",
       "type": "object",
       "properties": {
-        "uid": { "type": "string", "description": "The user ID." },
-        "displayName": { "type": "string", "description": "The display name of the user." },
-        "email": { "type": "string", "description": "The email address of the user." },
-        "photoURL": { "type": "string", "description": "The photo URL of the user." },
-        "lastLogin": { "type": "string", "format": "date-time", "description": "When the user last logged in." }
+        "uid": { "type": "string", "description": "Owner ID." },
+        "amount": { "type": "number", "description": "Transaction amount." },
+        "currency": { "type": "string", "description": "Currency code (e.g. USD, EUR)." },
+        "type": { "type": "string", "enum": ["deposit", "withdrawal", "transfer"], "description": "Type of transaction." },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"], "description": "Transaction status." },
+        "recipient": { "type": "string", "description": "Recipient address or ID." },
+        "timestamp": { "type": "string", "format": "date-time", "description": "Transaction time." }
       },
-      "required": ["uid", "displayName", "email", "lastLogin"]
+      "required": ["uid", "amount", "currency", "type", "status", "timestamp"]
+    },
+    "Portfolio": {
+      "title": "Portfolio",
+      "description": "A summary of user assets.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Owner ID." },
+        "totalValue": { "type": "number", "description": "Total value in USD." },
+        "assets": { "type": "array", "description": "List of assets." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update." }
+      },
+      "required": ["uid", "totalValue", "updatedAt"]
     }
   },
   "firestore": {
-    "/goals/{goalId}": {
-      "schema": "Goal",
-      "description": "Collection of user goals."
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Collection of institutional transactions."
     },
-    "/strategy/{strategyId}": {
-      "schema": "StrategySection",
-      "description": "Collection of user strategy sections."
+    "/portfolios/{userId}": {
+      "schema": "Portfolio",
+      "description": "User asset summaries."
     },
     "/users/{userId}": {
       "schema": "User",

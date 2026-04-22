@@ -3,6 +3,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { auth, signIn, logOut, db } from '../firebase';
 import { LogIn, LogOut, User as UserIcon, Loader2, ShieldCheck, Target, Sparkles, Zap } from 'lucide-react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from '../lib/firestoreUtils';
 
 interface AuthContextType {
   user: User | null;
@@ -30,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             lastLogin: serverTimestamp()
           }, { merge: true });
         } catch (error) {
-          console.error("Error syncing user to Firestore:", error);
+          handleFirestoreError(error, OperationType.WRITE, `users/${user.uid}`);
         }
       }
       setUser(user);

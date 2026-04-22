@@ -5,6 +5,7 @@ import { db } from '../firebase';
 import { useAuth } from './AuthProvider';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'motion/react';
+import { handleFirestoreError, OperationType } from '../lib/firestoreUtils';
 
 interface Goal {
   id: string;
@@ -40,7 +41,7 @@ export default function GoalTracker() {
       setGoals(goalsData);
       setIsLoading(false);
     }, (error) => {
-      console.error("Firestore Error:", error);
+      handleFirestoreError(error, OperationType.LIST, 'goals');
       setIsLoading(false);
     });
 
@@ -62,7 +63,7 @@ export default function GoalTracker() {
       setNewGoalTitle('');
       setIsAdding(false);
     } catch (error) {
-      console.error("Error adding goal:", error);
+      handleFirestoreError(error, OperationType.CREATE, 'goals');
     }
   };
 
@@ -82,7 +83,7 @@ export default function GoalTracker() {
         setTimeout(() => setShowCelebration(false), 3000);
       }
     } catch (error) {
-      console.error("Error updating goal:", error);
+      handleFirestoreError(error, OperationType.UPDATE, `goals/${id}`);
     }
   };
 
@@ -90,7 +91,7 @@ export default function GoalTracker() {
     try {
       await deleteDoc(doc(db, 'goals', id));
     } catch (error) {
-      console.error("Error deleting goal:", error);
+      handleFirestoreError(error, OperationType.DELETE, `goals/${id}`);
     }
   };
 
